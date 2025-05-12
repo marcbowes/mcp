@@ -191,21 +191,19 @@ class TestMcpListDiagramIcons:
 
     @pytest.mark.asyncio
     @patch('awslabs.aws_diagram_mcp_server.server.list_diagram_icons')
-    async def test_list_diagram_icons(self, mock_list_diagram_icons):
-        """Test the mcp_list_diagram_icons function."""
+    async def test_list_diagram_icons_without_filters(self, mock_list_diagram_icons):
+        """Test the mcp_list_diagram_icons function without filters."""
         # Set up the mock
         mock_list_diagram_icons.return_value = MagicMock(
             model_dump=MagicMock(
                 return_value={
                     'providers': {
-                        'aws': {
-                            'compute': ['EC2', 'Lambda'],
-                            'database': ['RDS', 'DynamoDB'],
-                        },
-                        'gcp': {
-                            'compute': ['GCE', 'GKE'],
-                        },
-                    }
+                        'aws': {},
+                        'gcp': {},
+                        'k8s': {},
+                    },
+                    'filtered': False,
+                    'filter_info': None,
                 }
             )
         )
@@ -216,18 +214,92 @@ class TestMcpListDiagramIcons:
         # Check the result
         assert result == {
             'providers': {
+                'aws': {},
+                'gcp': {},
+                'k8s': {},
+            },
+            'filtered': False,
+            'filter_info': None,
+        }
+
+        # Check that list_diagram_icons was called with the correct arguments
+        mock_list_diagram_icons.assert_called_once_with(None, None)
+
+    @pytest.mark.asyncio
+    @patch('awslabs.aws_diagram_mcp_server.server.list_diagram_icons')
+    async def test_list_diagram_icons_with_provider_filter(self, mock_list_diagram_icons):
+        """Test the mcp_list_diagram_icons function with provider filter."""
+        # Set up the mock
+        mock_list_diagram_icons.return_value = MagicMock(
+            model_dump=MagicMock(
+                return_value={
+                    'providers': {
+                        'aws': {
+                            'compute': ['EC2', 'Lambda'],
+                            'database': ['RDS', 'DynamoDB'],
+                        }
+                    },
+                    'filtered': True,
+                    'filter_info': {'provider': 'aws'},
+                }
+            )
+        )
+
+        # Call the function
+        result = await mcp_list_diagram_icons(provider_filter='aws')
+
+        # Check the result
+        assert result == {
+            'providers': {
                 'aws': {
                     'compute': ['EC2', 'Lambda'],
                     'database': ['RDS', 'DynamoDB'],
-                },
-                'gcp': {
-                    'compute': ['GCE', 'GKE'],
-                },
-            }
+                }
+            },
+            'filtered': True,
+            'filter_info': {'provider': 'aws'},
         }
 
-        # Check that list_diagram_icons was called
-        mock_list_diagram_icons.assert_called_once()
+        # Check that list_diagram_icons was called with the correct arguments
+        mock_list_diagram_icons.assert_called_once_with('aws', None)
+
+    @pytest.mark.asyncio
+    @patch('awslabs.aws_diagram_mcp_server.server.list_diagram_icons')
+    async def test_list_diagram_icons_with_provider_and_service_filter(
+        self, mock_list_diagram_icons
+    ):
+        """Test the mcp_list_diagram_icons function with provider and service filter."""
+        # Set up the mock
+        mock_list_diagram_icons.return_value = MagicMock(
+            model_dump=MagicMock(
+                return_value={
+                    'providers': {
+                        'aws': {
+                            'compute': ['EC2', 'Lambda'],
+                        }
+                    },
+                    'filtered': True,
+                    'filter_info': {'provider': 'aws', 'service': 'compute'},
+                }
+            )
+        )
+
+        # Call the function
+        result = await mcp_list_diagram_icons(provider_filter='aws', service_filter='compute')
+
+        # Check the result
+        assert result == {
+            'providers': {
+                'aws': {
+                    'compute': ['EC2', 'Lambda'],
+                }
+            },
+            'filtered': True,
+            'filter_info': {'provider': 'aws', 'service': 'compute'},
+        }
+
+        # Check that list_diagram_icons was called with the correct arguments
+        mock_list_diagram_icons.assert_called_once_with('aws', 'compute')
 
 
 class TestServerIntegration:
@@ -254,6 +326,6 @@ class TestServerIntegration:
         )
         assert (
             mcp_list_diagram_icons.__doc__ is not None
-            and 'List all available icons from the diagrams package'
+            and 'List available icons from the diagrams package, with optional filtering'
             in mcp_list_diagram_icons.__doc__
         )
