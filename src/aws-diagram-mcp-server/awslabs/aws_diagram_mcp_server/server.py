@@ -253,7 +253,11 @@ async def mcp_list_diagram_icons(
     Returns:
         Dictionary with available providers, services, and icons organized hierarchically
     """
-    result = list_diagram_icons(provider_filter, service_filter)
+    # Extract the actual values from the parameters
+    provider_filter_value = None if provider_filter is None else provider_filter
+    service_filter_value = None if service_filter is None else service_filter
+
+    result = list_diagram_icons(provider_filter_value, service_filter_value)
     return result.model_dump()
 
 

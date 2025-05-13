@@ -159,7 +159,8 @@ class TestListDiagramIcons:
         response = list_diagram_icons(provider_filter='invalid_provider')
         assert response.providers == {}
         assert response.filtered is True
-        assert response.filter_info['provider'] == 'invalid_provider'
+        assert response.filter_info is not None
+        assert response.filter_info.get('provider') == 'invalid_provider'
         assert 'error' in response.filter_info
 
     def test_list_icons_with_invalid_service(self):
@@ -169,8 +170,9 @@ class TestListDiagramIcons:
         assert 'aws' in response.providers
         assert response.providers['aws'] == {}
         assert response.filtered is True
-        assert response.filter_info['provider'] == 'aws'
-        assert response.filter_info['service'] == 'invalid_service'
+        assert response.filter_info is not None
+        assert response.filter_info.get('provider') == 'aws'
+        assert response.filter_info.get('service') == 'invalid_service'
         assert 'error' in response.filter_info
 
     def test_list_icons_with_service_filter_only(self):
@@ -178,7 +180,8 @@ class TestListDiagramIcons:
         response = list_diagram_icons(service_filter='compute')
         assert response.providers == {}
         assert response.filtered is True
-        assert response.filter_info['service'] == 'compute'
+        assert response.filter_info is not None
+        assert response.filter_info.get('service') == 'compute'
         assert 'error' in response.filter_info
 
 
