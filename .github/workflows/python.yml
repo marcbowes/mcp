@@ -60,7 +60,7 @@ jobs:
       - name: Install Graphviz (${{ matrix.os }})
         if: runner.os == 'Linux'
         env:
-          CACHE_HIT: ${{steps.cache-graphviz-${{ matrix.os }}.outputs.cache-hit}}
+          CACHE_HIT: ${{steps.cache-graphviz.outputs.cache-hit}}
         run: |
           if [[ "$CACHE_HIT" == 'true' ]]; then
             sudo cp --verbose --force --recursive ~/graphviz/* /
