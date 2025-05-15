@@ -92,7 +92,6 @@ The AWS Lambda MCP Server enables AI assistants to select and run AWS Lambda fun
 
 [Learn more about the AWS Lambda MCP Server](servers/lambda-mcp-server.md)
 
-
 ### AWS Diagram MCP Server
 
 This MCP server that seamlessly creates [diagrams](https://diagrams.mingrammer.com/) using the Python diagrams package DSL. This server allows you to generate AWS diagrams, sequence diagrams, flow diagrams, and class diagrams using Python code.
@@ -125,6 +124,19 @@ The Terraform MCP Server provides the following capabilities:
 
 [Learn more about the AWS Terraform MCP Server](servers/terraform-mcp-server.md)
 
+### Code Documentation Generation MCP Server
+
+The Code Documentation Generation MCP Server automatically generates comprehensive documentation for code repositories.
+
+**Features:**
+
+- Automated documentation generation based on repository analysis
+- AWS architecture diagram integration
+- Multiple document types (README, API, Backend, Frontend)
+- Interactive documentation creation workflow
+
+[Learn more about the Code Documentation Generation MCP Server](servers/code-doc-gen-mcp-server.md)
+
 ### AWS Location Service MCP Server
 
 A server for accessing AWS Location Service capabilities, focusing on place search, geographical coordinates, and route planning.
@@ -140,6 +152,17 @@ A server for accessing AWS Location Service capabilities, focusing on place sear
 - Optimize waypoints for efficient routing
 
 [Learn more about the AWS Location Service MCP Server](servers/aws-location-mcp-server.md)
+
+### CloudFormation MCP Server
+
+A server for managing your AWS resources directly and through cloudformation.
+
+**Features:**
+
+- Create/Update/Delete your resources with the resource access tools
+- List/Read your resources with the resource access tools
+
+[Learn more about the CloudFormation MCP Server](servers/cfn-mcp-server.md)
 
 ### Git Repo Research MCP Server
 
