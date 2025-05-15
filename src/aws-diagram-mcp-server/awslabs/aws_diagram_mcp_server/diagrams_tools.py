@@ -314,10 +314,8 @@ from diagrams.aws.enduser import *
         else:
             # Windows: Use threading.Timer
             timer = None
-            timeout_occurred = [False]  # Using a list to make it mutable in the nested function
 
             def windows_timeout_handler():
-                timeout_occurred[0] = True
                 raise TimeoutError(f'Diagram generation timed out after {timeout} seconds')
 
             timer = threading.Timer(timeout, windows_timeout_handler)
