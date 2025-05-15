@@ -55,7 +55,7 @@ jobs:
         id: cache-graphviz-ubuntu
         with:
           path: "~/graphviz"
-          key: graphviz-ubuntu
+          key: graphviz-${{ runner.os }}
 
       - name: Install Graphviz (${{ runner.os }})
         if: runner.os == 'Linux'
