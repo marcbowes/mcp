@@ -81,13 +81,13 @@ jobs:
       - name: Security check - Bandit
         id: bandit-check
         working-directory: src/${{ matrix.package }}
-        run: bandit -r --severity-level medium --confidence-level medium -f html -o bandit-report-${{ matrix.package }}.html -c "pyproject.toml" . || echo "status=failure" >> $GITHUB_OUTPUT
+        run: bandit -r --severity-level medium --confidence-level medium -f html -o bandit-report-${{ matrix.package }}-${{ matrix.os }}.html -c "pyproject.toml" . || echo "status=failure" >> $GITHUB_OUTPUT
 
       - name: Store Bandit as Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: bandit-report-${{ matrix.package }}.html
-          path: src/${{ matrix.package }}/bandit-report-${{ matrix.package }}.html
+          name: bandit-report-${{ matrix.package }}-${{ matrix.os }}.html
+          path: src/${{ matrix.package }}/bandit-report-${{ matrix.package }}-${{ matrix.os }}.html
 
       - name: Stop on Bandit failure
         if: steps.bandit-check.outputs.status == 'failure'
@@ -102,7 +102,7 @@ jobs:
         shell: bash
         run: |
           if [ -d "tests" ]; then
-            uv run --frozen pytest --cov --cov-branch --cov-report=term-missing --cov-report=xml:${{ matrix.package }}-coverage.xml
+            uv run --frozen pytest --cov --cov-branch --cov-report=term-missing --cov-report=xml:${{ matrix.package }}-${{ matrix.os }}-coverage.xml
           else
             echo "No tests directory found, skipping tests"
           fi
@@ -111,7 +111,7 @@ jobs:
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d #v5.4.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ${{ matrix.package }}-coverage.xml
+          files: ${{ matrix.package }}-${{ matrix.os }}-coverage.xml
 
       - name: Run pyright
         working-directory: src/${{ matrix.package }}
@@ -132,7 +132,7 @@ jobs:
       - name: Upload distribution
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: dist-${{ matrix.package }}
+          name: dist-${{ matrix.package }}-${{ matrix.os }}
           path: src/${{ matrix.package }}/dist/
 
       - name: Generate Software Bill of Materials (SBOM) - Unix
@@ -343,5 +343,5 @@ jobs:
       - name: Upload Software Bill of Materials
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: sbom-${{ matrix.package }}
+          name: sbom-${{ matrix.package }}-${{ matrix.os }}
           path: src/${{ matrix.package }}/sbom.json
