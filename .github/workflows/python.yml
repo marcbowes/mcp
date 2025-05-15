@@ -329,12 +329,12 @@ jobs:
           echo "    components = parse_bom(bom_file)" >> display_sbom.py
           echo "" >> display_sbom.py
           echo "    for component in components:" >> display_sbom.py
-          echo "        print(f'Name: {component['name']}')" >> display_sbom.py
-          echo "        print(f'Version: {component['version']}')" >> display_sbom.py
-          echo "        print(f'Description: {component['description']}')" >> display_sbom.py
-          echo "        print(f'PURL: {component['purl']}')" >> display_sbom.py
-          echo "        print(f'Licenses: {', '.join(component['licenses'])}')" >> display_sbom.py
-          echo "        print(f'Copyright: {component['copyright']}')" >> display_sbom.py
+          echo "        print(f""Name: {component['name']}"")" >> display_sbom.py
+          echo "        print(f""Version: {component['version']}"")" >> display_sbom.py
+          echo "        print(f""Description: {component['description']}"")" >> display_sbom.py
+          echo "        print(f""PURL: {component['purl']}"")" >> display_sbom.py
+          echo "        print(f""Licenses: {', '.join(component['licenses'])}"")" >> display_sbom.py
+          echo "        print(f""Copyright: {component['copyright']}"")" >> display_sbom.py
           echo "        print('-' * 40)" >> display_sbom.py
           echo "" >> display_sbom.py
           echo "if __name__ == '__main__':" >> display_sbom.py
