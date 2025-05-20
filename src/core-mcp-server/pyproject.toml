@@ -42,6 +42,7 @@ Changelog = "https://github.com/awslabs/mcp/blob/main/src/core-mcp-server/CHANGE
 
 [dependency-groups]
 dev = [
+    "bandit[toml]",
     "commitizen>=4.2.2",
     "pre-commit>=4.1.0",
     "ruff>=0.9.7",
