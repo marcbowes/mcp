@@ -161,7 +161,7 @@ To test the MCP server locally using Docker:
    ```
 
 2. **Create AWS credentials file:**
-   
+
    Option A - Manual creation:
    ```bash
    # Create .env file with your AWS credentials
@@ -171,7 +171,7 @@ To test the MCP server locally using Docker:
    AWS_SESSION_TOKEN=your_session_token_here
    EOF
    ```
-   
+
    Option B - Export from AWS CLI:
    ```bash
    aws configure export-credentials --profile your-profile-name --format env > temp_aws_credentials.env

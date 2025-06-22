@@ -34,10 +34,10 @@ class TestReadonlyEnforcement:
         """Test detection of complex queries that attempt to bypass readonly restrictions."""
         # Test a complex query that combines multiple statements
         complex_sql = "SELECT * FROM information_schema.tables; COMMIT; BEGIN; CREATE TABLE test_table (id int)"
-        
+
         # Should detect transaction bypass attempt
         assert detect_transaction_bypass_attempt(complex_sql) is True
-        
+
         # Should also detect mutating keywords
         mutating_keywords = detect_mutating_keywords(complex_sql)
         assert 'CREATE' in mutating_keywords
@@ -83,14 +83,14 @@ class TestReadonlyEnforcement:
             "SELECT u.name, o.total FROM users u JOIN orders o ON u.id = o.user_id",
             "WITH recent_orders AS (SELECT * FROM orders WHERE created_at > '2023-01-01') SELECT * FROM recent_orders",
         ]
-        
+
         for sql in safe_queries:
             # Should not detect mutating keywords
             assert detect_mutating_keywords(sql) == []
-            
+
             # Should not detect injection risks
             assert check_sql_injection_risk(sql) == []
-            
+
             # Should not detect transaction bypass attempts
             assert detect_transaction_bypass_attempt(sql) is False
 
@@ -103,7 +103,7 @@ class TestReadonlyEnforcement:
             "SELECT * FROM users UNION SELECT * FROM admin_users",
             "SELECT * FROM users WHERE id = 1; INSERT INTO logs VALUES ('hacked')",
         ]
-        
+
         for sql in injection_patterns:
             issues = check_sql_injection_risk(sql)
             assert len(issues) > 0, f"Should detect injection risk in: {sql}"
@@ -116,7 +116,7 @@ class TestReadonlyEnforcement:
             "SELECT COUNT(*); ROLLBACK; INSERT INTO logs VALUES ('bypass')",
             "SELECT name FROM users; COMMIT; ALTER TABLE users ADD COLUMN hacked boolean",
         ]
-        
+
         for sql in bypass_attempts:
             assert detect_transaction_bypass_attempt(sql) is True, f"Should detect bypass in: {sql}"
 
@@ -128,7 +128,7 @@ class TestReadonlyEnforcement:
             "CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password'",
             "DROP USER 'olduser'@'localhost'",
         ]
-        
+
         for sql in permission_sql:
             keywords = detect_mutating_keywords(sql)
             assert 'PERMISSION' in keywords, f"Should detect permission keywords in: {sql}"
@@ -141,7 +141,7 @@ class TestReadonlyEnforcement:
             "LOAD DATA INFILE '/tmp/data.csv' INTO TABLE users",
             "SELECT * INTO OUTFILE '/tmp/output.txt' FROM users",
         ]
-        
+
         for sql in system_sql:
             keywords = detect_mutating_keywords(sql)
             assert 'SYSTEM' in keywords, f"Should detect system keywords in: {sql}"
@@ -154,7 +154,7 @@ class TestReadonlyEnforcement:
             "Create Table test (id int)",
             "CrEaTe TaBlE test (id int)",
         ]
-        
+
         for sql in variations:
             keywords = detect_mutating_keywords(sql)
             assert 'CREATE' in keywords, f"Should detect CREATE regardless of case in: {sql}"
@@ -167,7 +167,7 @@ class TestReadonlyEnforcement:
             "COPY (SELECT * FROM users) TO '/tmp/export.csv'",
             "SELECT pg_sleep(5)",
         ]
-        
+
         for sql in postgres_sql:
             # Should detect either mutating keywords or injection risks
             has_mutating = len(detect_mutating_keywords(sql)) > 0
@@ -180,6 +180,6 @@ class TestReadonlyEnforcement:
             "SELECT * FROM users; -- This is a comment\nCOMMIT; CREATE TABLE hack (id int)",
             "/* Multi-line comment */ SELECT 1; COMMIT; DROP TABLE users",
         ]
-        
+
         for sql in sql_with_comments:
             assert detect_transaction_bypass_attempt(sql) is True, f"Should detect bypass despite comments in: {sql}"

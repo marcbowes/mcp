@@ -156,9 +156,7 @@ async def readonly_query(
 
     # Check for transaction bypass attempts (the main vulnerability)
     if detect_transaction_bypass_attempt(sql):
-        logger.warning(
-            f'readonly_query rejected due to transaction bypass attempt, SQL: {sql}'
-        )
+        logger.warning(f'readonly_query rejected due to transaction bypass attempt, SQL: {sql}')
         await ctx.error(ERROR_TRANSACTION_BYPASS_ATTEMPT)
         raise Exception(ERROR_TRANSACTION_BYPASS_ATTEMPT)
 

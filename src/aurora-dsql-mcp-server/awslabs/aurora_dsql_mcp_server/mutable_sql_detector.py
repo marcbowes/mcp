@@ -191,10 +191,7 @@ def detect_transaction_bypass_attempt(sql: str) -> bool:
         True if a bypass attempt is detected, False otherwise
     """
     # Look for COMMIT followed by other statements
-    commit_bypass_pattern = re.compile(
-        r'(?i)\bcommit\b.*?;\s*(?!($|\s*--|\s*/\*))\w+',
-        re.DOTALL
-    )
+    commit_bypass_pattern = re.compile(r'(?i)\bcommit\b.*?;\s*(?!($|\s*--|\s*/\*))\w+', re.DOTALL)
 
     # Look for multiple statements separated by semicolons
     multiple_statements = re.compile(r';\s*(?!($|\s*--|\s*/\*))(?=\S)')

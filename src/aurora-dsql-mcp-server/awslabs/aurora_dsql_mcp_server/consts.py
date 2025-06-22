@@ -45,4 +45,6 @@ ERROR_TRANSACT = 'Error executing transact'
 ERROR_GET_SCHEMA = 'Error executing get_schema'
 ERROR_WRITE_QUERY_PROHIBITED = 'Your MCP server does not allow write operations. To use write operations, change the MCP configuration per README.md'
 ERROR_QUERY_INJECTION_RISK = 'Your query contains risky injection patterns'
-ERROR_TRANSACTION_BYPASS_ATTEMPT = 'Query contains patterns that could bypass read-only transaction controls'
+ERROR_TRANSACTION_BYPASS_ATTEMPT = (
+    'Query contains patterns that could bypass read-only transaction controls'
+)
